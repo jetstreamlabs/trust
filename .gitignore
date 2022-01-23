@@ -2,7 +2,7 @@
 .idea/
 vendor/
 composer.lock
-package-json.lock 
 phpunit.xml
 node_modules/
 *.log
+package-lock.json
