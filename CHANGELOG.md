@@ -1,30 +1,28 @@
-# Snowflake Changelog
+# Trust Changelog
 
 # 1.0.0 (2022-01-23)
 
-
 ### Breaking
 
-* **init:** initial commit prior to any work ([c185e33](https://github.com/jetstreamlabs/trust/commit/c185e333586f2bb950d0bf1960a6d9dfa0349f23))
-
+- **init:** initial commit prior to any work ([c185e33](https://github.com/jetstreamlabs/trust/commit/c185e333586f2bb950d0bf1960a6d9dfa0349f23))
 
 ### Bug Fixes
 
-* repair workflow and add style ci on commit ([5d2ad4e](https://github.com/jetstreamlabs/trust/commit/5d2ad4e3936b6c8e209f0b08470dd529c5203ddb))
-
+- repair workflow and add style ci on commit ([5d2ad4e](https://github.com/jetstreamlabs/trust/commit/5d2ad4e3936b6c8e209f0b08470dd529c5203ddb))
 
 ### Features
 
-* add semantic-release to package ([1c86eba](https://github.com/jetstreamlabs/trust/commit/1c86ebabdd0b2510e9317882c8ba75470419de71))
-
+- add semantic-release to package ([1c86eba](https://github.com/jetstreamlabs/trust/commit/1c86ebabdd0b2510e9317882c8ba75470419de71))
 
 ### Maintenance
 
-* **init:** ammend gitignore ([44aa54d](https://github.com/jetstreamlabs/trust/commit/44aa54d90192923e0a601185c55e5264e2048daf))
-* **init:** initial commit of gitignore ([1396435](https://github.com/jetstreamlabs/trust/commit/1396435397e59d50df22133eba4f5934e97b0258))
-* search/replace error correction ([1262195](https://github.com/jetstreamlabs/trust/commit/1262195aa0511dacfd4dc2a442c0a1d996a60a85))
-* **style:** apply fixes from StyleCI ([0da5fae](https://github.com/jetstreamlabs/trust/commit/0da5fae054b049a956dcd93b6f9832ac66271428))
-* **style:** apply style fixes from style ci ([3f7d7b7](https://github.com/jetstreamlabs/trust/commit/3f7d7b758a23f440d2287bcba8c560be0c7ca5ab))
+- **init:** ammend gitignore ([44aa54d](https://github.com/jetstreamlabs/trust/commit/44aa54d90192923e0a601185c55e5264e2048daf))
+- **init:** initial commit of gitignore ([1396435](https://github.com/jetstreamlabs/trust/commit/1396435397e59d50df22133eba4f5934e97b0258))
+- search/replace error correction ([1262195](https://github.com/jetstreamlabs/trust/commit/1262195aa0511dacfd4dc2a442c0a1d996a60a85))
+- **style:** apply fixes from StyleCI ([0da5fae](https://github.com/jetstreamlabs/trust/commit/0da5fae054b049a956dcd93b6f9832ac66271428))
+- **style:** apply style fixes from style ci ([3f7d7b7](https://github.com/jetstreamlabs/trust/commit/3f7d7b758a23f440d2287bcba8c560be0c7ca5ab))
+
+# Previous Laratrust Changelog
 
 ## 6.1.0 (mayo 29, 2020)
 

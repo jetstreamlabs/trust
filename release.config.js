@@ -89,7 +89,7 @@ module.exports = {
 			'@semantic-release/changelog',
 			{
 				changelogFile: 'CHANGELOG.md',
-				changelogTitle: '# Snowflake Changelog',
+				changelogTitle: '# Trust Changelog',
 			},
 		],
 		// creating a new version commit
