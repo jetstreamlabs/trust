@@ -3,177 +3,182 @@
 namespace Jetlabs\Trust\Console;
 
 use Exception;
+use Illuminate\Database\Console\Seeds\SeederMakeCommand as LaravelMakeSeederCommand;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Database\Console\Seeds\SeederMakeCommand as LaravelMakeSeederCommand;
 
 class MakeSeederCommand extends LaravelMakeSeederCommand
 {
-    /**
-     * The console command name.
-     *
-     * @var string
-     */
-    protected $name = 'trust:seeder';
+	/**
+	 * The console command name.
+	 *
+	 * @var string
+	 */
+	protected $name = 'trust:seeder';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Creates the seeder following the Trust specifications.';
+	/**
+	 * The console command description.
+	 *
+	 * @var string
+	 */
+	protected $description = 'Creates the seeder following the Trust specifications.';
 
-    /**
-     * Execute the console command.
-     *
-     * @return void
-     */
-    public function handle()
-    {
-        if (file_exists($this->seederPath())) {
-            $this->line('');
+	/**
+	 * Execute the console command.
+	 *
+	 * @return void
+	 */
+	public function handle()
+	{
+		if (file_exists($this->seederPath())) {
+			$this->line('');
 
-            $this->warn("The TrustSeeder file already exists. Delete the existing one if you want to create a new one.");
-            $this->line('');
-            return;
-        }
+			$this->warn('The TrustSeeder file already exists. Delete the existing one if you want to create a new one.');
+			$this->line('');
 
-        try {
-            $seederClass = $this->createSeederClass();
-            $this->files->put($this->seederPath(), $seederClass);
-            $this->info("Seeder successfully created!");
-        } catch (Exception $exception) {
-            $folder = $this->files->dirname($this->seederPath());
-            $where = substr($folder, strpos($folder, 'database'));
+			return;
+		}
 
-            $this->error(
-                "Couldn't create seeder.\n".
-                "Check the write permissions within the $where directory."
-            );
-        }
+		try {
+			$seederClass = $this->createSeederClass();
+			$this->files->put($this->seederPath(), $seederClass);
+			$this->info('Seeder successfully created!');
+		} catch (Exception $exception) {
+			$folder = $this->files->dirname($this->seederPath());
+			$where = substr($folder, strpos($folder, 'database'));
 
-        $this->line('');
-    }
+			$this->error(
+				"Couldn't create seeder.\n".
+				"Check the write permissions within the $where directory."
+			);
+		}
 
-    /**
-     * Create the seeder
-     *
-     * @return string
-     */
-    protected function createSeederClass(): string
-    {
-        $stub = $this->files->get($this->getStub());
+		$this->line('');
+	}
 
-        $this->replaceSeederNamespace($stub);
-        $this->replaceModelClassNames($stub);
-        $this->replaceTableNames($stub);
+	/**
+	 * Create the seeder.
+	 *
+	 * @return string
+	 */
+	protected function createSeederClass(): string
+	{
+		$stub = $this->files->get($this->getStub());
 
-        return $stub;
-    }
+		$this->replaceSeederNamespace($stub);
+		$this->replaceModelClassNames($stub);
+		$this->replaceTableNames($stub);
 
-    /**
-     * Replace the namespace of the seeder.
-     * @param  string  $stub
-     */
-    protected function replaceSeederNamespace(string & $stub)
-    {
-        $namespace = '';
+		return $stub;
+	}
 
-        if (version_compare($this->getLaravel()->version(), '8.0') >= 0) {
-            $namespace = "\nnamespace Database\Seeders;\n";
-        }
+	/**
+	 * Replace the namespace of the seeder.
+	 *
+	 * @param  string  $stub
+	 */
+	protected function replaceSeederNamespace(string &$stub)
+	{
+		$namespace = '';
 
-        $this->replaceStubParameter($stub, 'namespace', $namespace);
-    }
+		if (version_compare($this->getLaravel()->version(), '8.0') >= 0) {
+			$namespace = "\nnamespace Database\Seeders;\n";
+		}
 
-    /**
-     * Replace the models class names in the stub.
-     * @param  string  $stub
-     */
-    protected function replaceModelClassNames(string & $stub)
-    {
-        $role = Config::get('trust.models.role', 'App\Role');
-        $this->replaceStubParameter($stub, 'roleConfiguredModelClass', '\\' . ltrim($role, '\\'));
+		$this->replaceStubParameter($stub, 'namespace', $namespace);
+	}
 
-        $permission = Config::get('trust.models.permission', 'App\Permission');
-        $this->replaceStubParameter($stub, 'permissionConfiguredModelClass', '\\' . ltrim($permission, '\\'));
-   
-        $user = new Collection(Config::get('trust.user_models', ['App\User']));
-        $user = $user->first();
-        $this->replaceStubParameter($stub, 'userConfiguredModelClass', '\\' . ltrim($user, '\\'));
-    }
+	/**
+	 * Replace the models class names in the stub.
+	 *
+	 * @param  string  $stub
+	 */
+	protected function replaceModelClassNames(string &$stub)
+	{
+		$role = Config::get('trust.models.role', 'App\Role');
+		$this->replaceStubParameter($stub, 'roleConfiguredModelClass', '\\'.ltrim($role, '\\'));
 
-    /**
-     * Replace the table names in the stub.
-     * @param  string  $stub
-     */
-    protected function replaceTableNames(string & $stub)
-    {
-        $rolePermission = Config::get('trust.tables.permission_role');
-        $this->replaceStubParameter($stub, 'permission_roleConfiguredTableName', $rolePermission);
+		$permission = Config::get('trust.models.permission', 'App\Permission');
+		$this->replaceStubParameter($stub, 'permissionConfiguredModelClass', '\\'.ltrim($permission, '\\'));
 
-        $permissionUser = Config::get('trust.tables.permission_user');
-        $this->replaceStubParameter($stub, 'permission_userConfiguredTableName', $permissionUser);
+		$user = new Collection(Config::get('trust.user_models', ['App\User']));
+		$user = $user->first();
+		$this->replaceStubParameter($stub, 'userConfiguredModelClass', '\\'.ltrim($user, '\\'));
+	}
 
-        $roleUser = Config::get('trust.tables.role_user');
-        $this->replaceStubParameter($stub, 'role_userConfiguredTableName', $roleUser);
+	/**
+	 * Replace the table names in the stub.
+	 *
+	 * @param  string  $stub
+	 */
+	protected function replaceTableNames(string &$stub)
+	{
+		$rolePermission = Config::get('trust.tables.permission_role');
+		$this->replaceStubParameter($stub, 'permission_roleConfiguredTableName', $rolePermission);
 
-        $rolesTable = Config::get('trust.tables.roles');
-        $this->replaceStubParameter($stub, 'rolesTableName', $rolesTable);
+		$permissionUser = Config::get('trust.tables.permission_user');
+		$this->replaceStubParameter($stub, 'permission_userConfiguredTableName', $permissionUser);
 
-        $permissionsTable = Config::get('trust.tables.permissions');
-        $this->replaceStubParameter($stub, 'permissionsTableName', $permissionsTable);
-    }
+		$roleUser = Config::get('trust.tables.role_user');
+		$this->replaceStubParameter($stub, 'role_userConfiguredTableName', $roleUser);
 
-    /**
-     * Replace a placeholder parameter in the stub.
-     * @param  string  $stub
-     * @param  string  $parameter
-     * @param  string  $value
-     */
-    protected function replaceStubParameter(string & $stub, string $parameter, string $value)
-    {
-        $stub = str_replace('{{'.$parameter.'}}', $value, $stub);
-    }
+		$rolesTable = Config::get('trust.tables.roles');
+		$this->replaceStubParameter($stub, 'rolesTableName', $rolesTable);
 
-    /**
-     * Get the seeder stub file.
-     *
-     * @return string
-     */
-    protected function getStub()
-    {
-        return $this->resolveStubPath('/stubs/seeder.stub');
-    }
+		$permissionsTable = Config::get('trust.tables.permissions');
+		$this->replaceStubParameter($stub, 'permissionsTableName', $permissionsTable);
+	}
 
-    /**
-     * Resolve the fully-qualified path to the stub.
-     *
-     * @param  string  $stub
-     * @return string
-     */
-    protected function resolveStubPath($stub)
-    {
-        return __DIR__."/../../$stub";
-    }
+	/**
+	 * Replace a placeholder parameter in the stub.
+	 *
+	 * @param  string  $stub
+	 * @param  string  $parameter
+	 * @param  string  $value
+	 */
+	protected function replaceStubParameter(string &$stub, string $parameter, string $value)
+	{
+		$stub = str_replace('{{'.$parameter.'}}', $value, $stub);
+	}
 
-    /**
-     * Get the seeder path.
-     *
-     * @return string
-     */
-    protected function seederPath()
-    {
-        return $this->getPath('TrustSeeder');
-    }
+	/**
+	 * Get the seeder stub file.
+	 *
+	 * @return string
+	 */
+	protected function getStub()
+	{
+		return $this->resolveStubPath('/stubs/seeder.stub');
+	}
 
-    /**
-     * Get the console command arguments.
-     *
-     * @return array
-     */
-    protected function getArguments()
-    {
-        return [];
-    }
+	/**
+	 * Resolve the fully-qualified path to the stub.
+	 *
+	 * @param  string  $stub
+	 * @return string
+	 */
+	protected function resolveStubPath($stub)
+	{
+		return __DIR__."/../../$stub";
+	}
+
+	/**
+	 * Get the seeder path.
+	 *
+	 * @return string
+	 */
+	protected function seederPath()
+	{
+		return $this->getPath('TrustSeeder');
+	}
+
+	/**
+	 * Get the console command arguments.
+	 *
+	 * @return array
+	 */
+	protected function getArguments()
+	{
+		return [];
+	}
 }

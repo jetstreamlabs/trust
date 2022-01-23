@@ -56,7 +56,7 @@
 				"Jetlabs\\Trust\\TrustServiceProvider"
 			],
 			"aliases": {
-				"Jetlabs\\Trust": "Jetlabs\\Trust\\Facade"
+				"Jetlabs\\Trust": "Jetlabs\\Trust\\TrustFacade"
 			}
 		}
 	}

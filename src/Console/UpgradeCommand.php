@@ -7,142 +7,144 @@ use Illuminate\Support\Facades\Config;
 
 class UpgradeCommand extends Command
 {
-    /**
-     * The console command name.
-     *
-     * @var string
-     */
-    protected $name = 'trust:upgrade';
+	/**
+	 * The console command name.
+	 *
+	 * @var string
+	 */
+	protected $name = 'trust:upgrade';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Creates a migration to upgrade trust from version 4.0 to 5.0.';
+	/**
+	 * The console command description.
+	 *
+	 * @var string
+	 */
+	protected $description = 'Creates a migration to upgrade trust from version 4.0 to 5.0.';
 
-    /**
-     * Suffix of the migration name.
-     *
-     * @var string
-     */
-    protected $migrationSuffix = 'laratrust_upgrade_tables';
+	/**
+	 * Suffix of the migration name.
+	 *
+	 * @var string
+	 */
+	protected $migrationSuffix = 'laratrust_upgrade_tables';
 
-    /**
-     * Execute the console command.
-     *
-     * @return void
-     */
-    public function handle()
-    {
-        $this->info("There is nothing to upgrade through the command.");
-        return;
+	/**
+	 * Execute the console command.
+	 *
+	 * @return void
+	 */
+	public function handle()
+	{
+		$this->info('There is nothing to upgrade through the command.');
 
-        $this->line('');
-        $this->info("The Trust upgrade migration will be created in the database/migration directory");
+		return;
 
-        $existingMigrations = $this->alreadyExistingMigrations();
+		$this->line('');
+		$this->info('The Trust upgrade migration will be created in the database/migration directory');
 
-        if ($existingMigrations) {
-            $this->line('');
+		$existingMigrations = $this->alreadyExistingMigrations();
 
-            $this->warn($this->getExistingMigrationsWarning($existingMigrations));
-        }
+		if ($existingMigrations) {
+			$this->line('');
 
-        $this->line('');
+			$this->warn($this->getExistingMigrationsWarning($existingMigrations));
+		}
 
-        if (! $this->confirm("Proceed with the migration creation?", "yes")) {
-            return;
-        }
+		$this->line('');
 
-        $this->line('');
+		if (! $this->confirm('Proceed with the migration creation?', 'yes')) {
+			return;
+		}
 
-        $this->info("Creating migration...");
+		$this->line('');
 
-        if ($this->createMigration()) {
-            $this->info("Migration successfully created!");
-        } else {
-            $this->error(
-                "Couldn't create migration.\n".
-                "Check the write permissions within the database/migrations directory."
-            );
-        }
+		$this->info('Creating migration...');
 
-        $this->line('');
-    }
+		if ($this->createMigration()) {
+			$this->info('Migration successfully created!');
+		} else {
+			$this->error(
+				"Couldn't create migration.\n".
+				'Check the write permissions within the database/migrations directory.'
+			);
+		}
 
-    /**
-     * Create the migration.
-     *
-     * @return bool
-     */
-    protected function createMigration()
-    {
-        $migrationPath = $this->getMigrationPath();
+		$this->line('');
+	}
 
-        $this->call('view:clear');
-        $output = $this->laravel->view
-            ->make('trust::upgrade-migration')
-            ->with(['trust' => Config::get('trust')])
-            ->render();
+	/**
+	 * Create the migration.
+	 *
+	 * @return bool
+	 */
+	protected function createMigration()
+	{
+		$migrationPath = $this->getMigrationPath();
 
-        if (!file_exists($migrationPath) && $fs = fopen($migrationPath, 'x')) {
-            fwrite($fs, $output);
-            fclose($fs);
-            return true;
-        }
+		$this->call('view:clear');
+		$output = $this->laravel->view
+			->make('trust::upgrade-migration')
+			->with(['trust' => Config::get('trust')])
+			->render();
 
-        return false;
-    }
+		if (! file_exists($migrationPath) && $fs = fopen($migrationPath, 'x')) {
+			fwrite($fs, $output);
+			fclose($fs);
 
-    /**
-     * Build a warning regarding possible duplication
-     * due to already existing migrations.
-     *
-     * @param  array $existingMigrations
-     * @return string
-     */
-    protected function getExistingMigrationsWarning(array $existingMigrations)
-    {
-        if (count($existingMigrations) > 1) {
-            $base = "Trust upgrade migrations already exist.\nFollowing files were found: ";
-        } else {
-            $base = "Trust upgrade migration already exists.\nFollowing file was found: ";
-        }
+			return true;
+		}
 
-        return $base . array_reduce($existingMigrations, function ($carry, $fileName) {
-            return $carry . "\n - " . $fileName;
-        });
-    }
+		return false;
+	}
 
-    /**
-     * Check if there is another migration
-     * with the same suffix.
-     *
-     * @return array
-     */
-    protected function alreadyExistingMigrations()
-    {
-        $matchingFiles = glob($this->getMigrationPath('*'));
+	/**
+	 * Build a warning regarding possible duplication
+	 * due to already existing migrations.
+	 *
+	 * @param  array  $existingMigrations
+	 * @return string
+	 */
+	protected function getExistingMigrationsWarning(array $existingMigrations)
+	{
+		if (count($existingMigrations) > 1) {
+			$base = "Trust upgrade migrations already exist.\nFollowing files were found: ";
+		} else {
+			$base = "Trust upgrade migration already exists.\nFollowing file was found: ";
+		}
 
-        return array_map(function ($path) {
-            return basename($path);
-        }, $matchingFiles);
-    }
+		return $base.array_reduce($existingMigrations, function ($carry, $fileName) {
+			return $carry."\n - ".$fileName;
+		});
+	}
 
-    /**
-     * Get the migration path.
-     *
-     * The date parameter is optional for ability
-     * to provide a custom value or a wildcard.
-     *
-     * @param  string|null $date
-     * @return string
-     */
-    protected function getMigrationPath($date = null)
-    {
-        $date = $date ?: date('Y_m_d_His');
+	/**
+	 * Check if there is another migration
+	 * with the same suffix.
+	 *
+	 * @return array
+	 */
+	protected function alreadyExistingMigrations()
+	{
+		$matchingFiles = glob($this->getMigrationPath('*'));
 
-        return database_path("migrations/${date}_{$this->migrationSuffix}.php");
-    }
+		return array_map(function ($path) {
+			return basename($path);
+		}, $matchingFiles);
+	}
+
+	/**
+	 * Get the migration path.
+	 *
+	 * The date parameter is optional for ability
+	 * to provide a custom value or a wildcard.
+	 *
+	 * @param  string|null  $date
+	 * @return string
+	 */
+	protected function getMigrationPath($date = null)
+	{
+		$date = $date ?: date('Y_m_d_His');
+
+		return database_path("migrations/${date}_{$this->migrationSuffix}.php");
+	}
 }

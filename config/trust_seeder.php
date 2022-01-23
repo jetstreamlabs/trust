@@ -1,38 +1,38 @@
 <?php
 
 return [
-    /**
-     * Control if the seeder should create a user per role while seeding the data.
-     */
-    'create_users' => false,
+	/**
+	 * Control if the seeder should create a user per role while seeding the data.
+	 */
+	'create_users' => false,
 
-    /**
-     * Control if all the trust tables should be truncated before running the seeder.
-     */
-    'truncate_tables' => true,
+	/**
+	 * Control if all the trust tables should be truncated before running the seeder.
+	 */
+	'truncate_tables' => true,
 
-    'roles_structure' => [
-        'superadmin' => [
-            'users' => 'c,r,u,d',
-            'payments' => 'c,r,u,d',
-            'profile' => 'r,u'
-        ],
-        'admin' => [
-            'users' => 'c,r,u,d',
-            'profile' => 'r,u'
-        ],
-        'user' => [
-            'profile' => 'r,u',
-        ],
-        'role_name' => [
-            'module_1_name' => 'c,r,u,d',
-        ]
-    ],
+	'roles_structure' => [
+		'superadmin' => [
+			'users' => 'c,r,u,d',
+			'payments' => 'c,r,u,d',
+			'profile' => 'r,u',
+		],
+		'admin' => [
+			'users' => 'c,r,u,d',
+			'profile' => 'r,u',
+		],
+		'user' => [
+			'profile' => 'r,u',
+		],
+		'role_name' => [
+			'module_1_name' => 'c,r,u,d',
+		],
+	],
 
-    'permissions_map' => [
-        'c' => 'create',
-        'r' => 'read',
-        'u' => 'update',
-        'd' => 'delete'
-    ]
+	'permissions_map' => [
+		'c' => 'create',
+		'r' => 'read',
+		'u' => 'update',
+		'd' => 'delete',
+	],
 ];
