@@ -1,5 +1,12 @@
 # Trust Changelog
 
+## [1.0.1](https://github.com/jetstreamlabs/trust/compare/v1.0.0...v1.0.1) (2022-01-23)
+
+
+### Bug Fixes
+
+* changelog titles ([231e9a0](https://github.com/jetstreamlabs/trust/commit/231e9a01418846c258dcd28e9c907bcd6256ab46))
+
 # 1.0.0 (2022-01-23)
 
 ### Breaking
