@@ -1,6 +1,6 @@
 {
 	"name": "jetstreamlabs/trust",
-	"description": "Recoded package of Trust for implementing in Laravel Jetstream.",
+	"description": "Recoded package of Laratrust for implementing in Laravel Jetstream.",
 	"keywords": [
 		"acl",
 		"authorization",
