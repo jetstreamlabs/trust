@@ -1,0 +1,10 @@
+<?php
+
+namespace DummyNamespace;
+
+use Jetlabs\Trust\Models\TrustRole;
+
+class DummyClass extends TrustRole
+{
+    public $guarded = [];
+}
